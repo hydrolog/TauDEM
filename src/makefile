@@ -98,9 +98,13 @@ INCDIRS+=`nc-config --cflags`
 #LDLIBS=-L/usr/local/lib -lgdal
 LDLIBS=`gdal-config --libs`
 LDLIBS+=`nc-config --libs`
+USER_BIN=../bin
 
 #Rules: when and how to make a file
-all : ../bin/areadinf ../bin/aread8 ../bin/moveoutletstostrm ../bin/dropanalysis ../bin/streamnet ../bin/gridnet ../bin/dinfflowdir ../bin/d8flowdir ../bin/d8flowpathextremeup ../bin/d8hdisttostrm ../bin/d8vdisttostrm ../bin/dinfavalanche ../bin/dinfconclimaccum ../bin/dinfdecayaccum ../bin/dinfdistdown ../bin/dinfdistup ../bin/dinfrevaccum ../bin/dinftranslimaccum ../bin/dinfupdependence ../bin/lengtharea ../bin/peukerdouglas ../bin/pitremove ../bin/slopearea ../bin/slopearearatio ../bin/slopeavedown ../bin/threshold ../bin/twi ../bin/gagewatershed ../bin/connectdown ../bin/catchhydrogeo ../bin/inunmap ../bin/editraster ../bin/catchoutlets ../bin/flowdircond ../bin/retlimflow ../bin/setregion ../bin/sinmapsi clean 
+all : bindir ../bin/areadinf ../bin/aread8 ../bin/moveoutletstostrm ../bin/dropanalysis ../bin/streamnet ../bin/gridnet ../bin/dinfflowdir ../bin/d8flowdir ../bin/d8flowpathextremeup ../bin/d8hdisttostrm ../bin/d8vdisttostrm ../bin/dinfavalanche ../bin/dinfconclimaccum ../bin/dinfdecayaccum ../bin/dinfdistdown ../bin/dinfdistup ../bin/dinfrevaccum ../bin/dinftranslimaccum ../bin/dinfupdependence ../bin/lengtharea ../bin/peukerdouglas ../bin/pitremove ../bin/slopearea ../bin/slopearearatio ../bin/slopeavedown ../bin/threshold ../bin/twi ../bin/gagewatershed ../bin/connectdown ../bin/catchhydrogeo ../bin/inunmap ../bin/editraster ../bin/catchoutlets ../bin/flowdircond ../bin/retlimflow ../bin/setregion ../bin/sinmapsi 
+
+bindir :
+	mkdir -p $(USER_BIN)
 
 ../bin/aread8 : $(D8FILES)
 	$(CC) $(CFLAGS) -o $@ $(LIBDIRS) $(D8FILES) $(LDLIBS) $(LDFLAGS)
