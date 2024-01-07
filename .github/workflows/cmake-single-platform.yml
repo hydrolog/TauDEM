@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Dependencies gdal and mpich
       - uses: actions/checkout@v3
-        run:
+        run: |
           sudo apt-get update
           sudo apt-get install gdal-bin libgdal-dev libmpich-dev
  
