@@ -17,25 +17,27 @@ jobs:
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
       - name: Dependencies gdal and mpich
+        uses: actions/checkout@v3
         run: |
           sudo apt-get update
           sudo apt-get install gdal-bin libgdal-dev libmpich-dev
  
       - name: Configure CMake
+        uses: actions/checkout@v3
         working-directory: ${{github.workspace}}/src
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
       - name: Build
+        uses: actions/checkout@v3
         # Build your program with the given configuration
         working-directory: ${{github.workspace}}/src
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
       - name: Test
+        uses: actions/checkout@v3
         working-directory: ${{github.workspace}}/src
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
