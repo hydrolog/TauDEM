@@ -3,7 +3,7 @@
 name: CMake on a single platform
 
 on:
-  dispatch:
+  workflow_dispatch:
     branches: [ "Develop" ]
 
 env:
