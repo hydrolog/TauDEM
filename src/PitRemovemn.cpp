@@ -160,7 +160,11 @@ int main(int argc,char **argv)
 	   printf("General use with specific file names:\n %s -z <demfile> ",argv[0]);
            printf("-fel <newfile> [-depmask <maskfile>] [ -4way] [-v] \n");
 	   printf("General use requires specification of the file name for each input/output, preceded by a flag indicating\n");
+<<<<<<< HEAD
 	   printf("the file content.\n");
+=======
+	   printf("the file content.\n"); 
+>>>>>>> 97badfc400b6ffe99cc34296a0a8fa6b7f74684c
 	   printf("<demfile> is the name of the input elevation grid file.\n");
 	   printf("<newfile> is the output elevation grid with pits filled.\n");
 	   //printf("<flowfile> (optional) is the input grid of flow directions to be imposed.\n");
