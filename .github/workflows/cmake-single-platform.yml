@@ -45,4 +45,4 @@ jobs:
 
       - name: Install
         working-directory: ${{github.workspace}}/src
-        run: cmake --install ${{github.workspace}}/bin --config ${{env.BUILD_TYPE}} --prefix ${{github.workspace}}
+        run: cmake --install --prefix ${{github.workspace}}
