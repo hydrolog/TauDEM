@@ -37,11 +37,17 @@ jobs:
         working-directory: ${{github.workspace}}/src
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} 
   
-  #    - name: Test
-  #       working-directory: ${{github.workspace}}/src
+      - name: Test
+        working-directory: ${{github.workspace}}/src
         # Execute tests defined by the CMake configuration.
-  #       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
- #        run: ctest -C ${{env.BUILD_TYPE}}
-  
-  #   - name: Install        
-  #    make -C ${{github.workspace}}/build install
+        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+        run: ctest -C ${{env.BUILD_TYPE}}
+      
+      - name: 'Tar files':
+        run: tar -cvf taudem.tar ${{github.workspace}}/build
+
+      - name: 'Upload Artifacts'
+        uses: actions/upload-artifact@v4
+        with:
+          name: taudem-bin
+          path: taudem.tar
