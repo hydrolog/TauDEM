@@ -1,0 +1,6 @@
+
+{ "dependencies": [ 
+        "gdal",
+        "mpi"	
+ ] 
+ }
