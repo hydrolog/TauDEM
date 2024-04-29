@@ -49,5 +49,5 @@ jobs:
       - name: 'Upload Artifacts'
         uses: actions/upload-artifact@v4
         with:
-          name: taudem-install
-          path: taudem.tar
+          name: taudem-linux-x84_64
+          path: taudem-linux-x86_64.tar
