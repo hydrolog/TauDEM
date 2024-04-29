@@ -44,7 +44,7 @@ jobs:
         run: ctest -C ${{env.BUILD_TYPE}}
       
       - name: 'Tar files'
-        run: tar -cvf taudem.tar ${{github.workspace}}/build
+        run: tar -cvf taudem-linux-x86_64.tar ${{github.workspace}}/build
 
       - name: 'Upload Artifacts'
         uses: actions/upload-artifact@v4
