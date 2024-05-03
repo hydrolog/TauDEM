@@ -1,0 +1,17 @@
+[project]
+name = "TauDEM"
+version = "0.1.0"
+description = "Add a short description here"
+authors = ["nilocj <nilocj@outlook.com>"]
+channels = ["conda-forge"]
+platforms = ["linux-64","win-64"]
+
+[tasks]
+
+[dependencies]
+mpi = ">=1.0,<2"
+libgdal = ">=3.8.5,<3.9"
+mpich-mpicxx = ">=4.2.1,<4.3"
+cmake = ">=3.29.2,<3.30"
+
+[target.win-64.dependencies]
