@@ -1,6 +1,6 @@
 [project]
 name = "TauDEM"
-version = "0.1.0"
+version = "0.4.4"
 description = "Add a short description here"
 authors = ["nilocj <nilocj@outlook.com>"]
 channels = ["conda-forge"]
@@ -15,3 +15,4 @@ mpich-mpicxx = ">=4.2.1,<4.3"
 cmake = ">=3.29.2,<3.30"
 
 [target.win-64.dependencies]
+msmpi = "*"
