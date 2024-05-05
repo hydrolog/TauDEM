@@ -11,8 +11,11 @@ platforms = ["linux-64","win-64"]
 [dependencies]
 mpi = ">=1.0,<2"
 libgdal = ">=3.8.5,<3.9"
-mpich-mpicxx = ">=4.2.1,<4.3"
 cmake = ">=3.29.2,<3.30"
 
+[target.linux-64.dependencies]
+mpich-mpicxx = ">=4.2.1,<4.3"
+
 [target.win-64.dependencies]
-msmpi = "*"
+msmpi = ">=10.1.1,<10.2"
+
