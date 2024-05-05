@@ -1,8 +1,8 @@
 [project]
 name = "TauDEM"
-version = "0.4.4"
-description = "Add a short description here"
-authors = ["nilocj <nilocj@outlook.com>"]
+version = "5.3.9"
+description = "TauDEM (Terrain Analysis Using Digital Elevation Models)"
+authors = ["David Tarboton <dtarb@usu.edu"]
 channels = ["conda-forge"]
 platforms = ["linux-64","win-64"]
 
@@ -11,8 +11,11 @@ platforms = ["linux-64","win-64"]
 [dependencies]
 mpi = ">=1.0,<2"
 libgdal = ">=3.8.5,<3.9"
-mpich-mpicxx = ">=4.2.1,<4.3"
 cmake = ">=3.29.2,<3.30"
 
+[target.linux-64.dependencies]
+mpich-mpicxx = ">=4.2.1,<4.3"
+
 [target.win-64.dependencies]
-msmpi = "*"
+msmpi = ">=10.1.1,<10.2"
+
