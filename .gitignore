@@ -51,7 +51,7 @@ local.properties
 .builds
 *.dotCover
 ## TODO: If you have NuGet Package Restore enabled, uncomment this
-#packages/
+packages/
 # Visual C++ cache files
 ipch/
 *.aps
@@ -166,4 +166,5 @@ pyfiles/.idea/
 # pixi environments
 .pixi
 *.egg-info
-
+build-*/
+archive/

@@ -23,3 +23,14 @@
 # GitHub syntax highlighting
 pixi.lock linguist-language=YAML
 
+# binary
+*.png binary
+*.jpg binary
+*.tif binary
+*.nc binary
+*.shp binary
+*.dbf binary
+*.shx binary
+*.gdb binary
+*.gdb binary
+*.zip binary
