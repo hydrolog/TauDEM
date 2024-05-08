@@ -1,16 +1,43 @@
 #!/usr/bin/env bash
 #
-# Build of TauDEM for user install in ~/.local prefix
+# Build of TauDEM for user install in $DESTDIR
 #
-export DEST_DIR=.
-PLATFORM=$(echo "$(uname -s)" | tr [:upper:] [:lower:])
-BUILD_DIR=./build-${PLATFORM}
-echo "Target build dir is ${BUILD_DIR}"
-rm -rf ${BUILD_DIR}
-mkdir -p ${BUILD_DIR} && mkdir -p ${DEST_DIR}
-cd ${BUILD_DIR}  && cmake -DCMAKE_INSTALL_PREFIX=${DEST_DIR} ../src 
-cmake --build . --target install --config Release
-cmake --install ${DEST_DIR} --prefix ${DEST_DIR} --config Release  
+#PLATFORM=$(echo "$(uname -s)" | tr [:upper:] [:lower:])
+#to_lower()
+
+PLATFORM="$(uname -s)"
+
+if [[ $PLATFORM == "Windows_NT" ]]; then
+  platf="win-64"
+elif [[ $PLATFORM == "Linux" ]]; then
+  platf="linux-64"
+elif [[ PLATFORM == "Darwin" ]]; then
+  platf="osx-64"
+  echo "$platf not yet supported"
+  exit 0;
+fi
+echo "Building for $platf"
+
+mkdir -p ./build-$platf
+mkdir -p ./archive
+
+BUILDDIR="./build-$platf"
+DESTDIR=./archive
+SRCDIR=./src
+PRJDIR="$(pwd)"
+
+echo "Target build dir is ${BUILDDIR}"
+
+cmake --install-prefix ${PRJDIR} -S ${SRCDIR} -B ${BUILDDIR}
+cmake --build ${BUILDDIR} --target install --config Release
+cmake --install ${BUILDDIR}
+
+if [[ $platf == "win-64" ]]; then
+  zip -r ${DESTDIR}/taudem-${platf}.zip ${PRJDIR}/taudem/
+else
+  tar -czvf ${DESTDIR}/taudem-${platf}.tar.gz ${PRJDIR}/taudem/ 
+fi
+
 
 #make -j 16 
 #make test
