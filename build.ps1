@@ -22,7 +22,7 @@ $PRJDIR = Get-Location | Resolve-Path
 
 #Set-Location -Path ${BUILDDIR}  
 
-cmake --install-prefix ${BUILDDIR} -S ${SRCDIR} -B ${BUILDDIR} 
+cmake --install-prefix ${PRJDIR} -S ${SRCDIR} -B ${BUILDDIR} 
 cmake --build ${BUILDDIR} --target install --config Release
 
 $compress = @{
