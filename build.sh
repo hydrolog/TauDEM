@@ -27,17 +27,21 @@ DEST_DIR="${PRJ_DIR}/archive"
 SRC_DIR="${PRJ_DIR}/src"
 INSTALL_DIR="${BUILD_DIR}"
 
-echo "Target build dir is ${BUILD}"
+echo "Target build dir is ${BUILD_DIR}"
 
 cmake --install-prefix ${INSTALL_DIR} -S ${SRC_DIR} -B ${BUILD_DIR}
-cmake --build ${BUILD_DIR} --target install --config Release
-cmake --install ${BUILD_DIR}
+cmake --build ${BUILD_DIR} --config Release
+cmake --install ${BUILD_DIR} --config Release
 
+cd $INSTALL_DIR
 if [[ $platf == "win-64" ]]; then
-  zip -r ${DEST_DIR}/taudem-${platf}.zip ${INSTALL_DIR}/taudem/
+  zip -r ${DEST_DIR}/taudem-${platf}.zip taudem/
 else
-  tar -czvf ${DEST_DIR}/taudem-${platf}.tar.gz ${INSTALL_DIR}/taudem/ 
+  tar -czvf ${DEST_DIR}/taudem-${platf}.tar.gz taudem/ 
 fi
+cd $PRJ_DIR
+
+echo "Finished!"
 
 #make -j 16 
 #make test

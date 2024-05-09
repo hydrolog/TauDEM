@@ -10,9 +10,11 @@ platforms = ["linux-64","win-64"]
 
 [dependencies]
 mpi = ">=1.0,<2"
-libgdal = ">=3.8.5,<3.9"
+#libgdal = ">=3.8.5,<3.9"
 cmake = ">=3.29.2,<3.30"
 cxx-compiler = ">=1.7.0,<1.8"
+libgdal = ">=3.8.5,<3.9"
+#cxx-compiler = ">=1.7.0,<1.8"
 
 [target.linux-64.dependencies]
 mpich-mpicxx = ">=4.2.1,<4.3"

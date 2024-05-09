@@ -26,32 +26,32 @@ if ($PLATFORM -eq 'Windows_NT') {
 New-FolderIfNot "./build-$platf"
 New-FolderIfNot "./archive"
 $PRJ_DIR = Get-Location | Resolve-Path
-$BUILD_DIR = "${PRJ_DIR}/build-$platf" | Resolve-Path
-$DEST_DIR = "${PRJ_DIR}/archive" | Resolve-Path
-$SRC_DIR = "${PRJ_DIR}/src" | Resolve-Path
-$INSTALL_DIR = "${BUILD_DIR}" 
-
-#Set-Location -Path ${BUILDDIR}  
-
-Write-Output "Target build dir is ${BUILD}"
+$BUILD_DIR = "./build-$platf" | Resolve-Path 
+$DEST_DIR = "./archive" | Resolve-Path
+$SRC_DIR = "./src" | Resolve-Path
+$INSTALL_DIR = "${BUILD_DIR}"  
+  
+Write-Output "Target build dir is ${BUILD_DIR}"
 cmake --install-prefix ${INSTALL_DIR} -S ${SRC_DIR} -B ${BUILD_DIR}
-cmake --build ${BUILD_DIR} --target install --config Release
-cmake --install ${BUILD_DIR}
+cmake --build ${BUILD_DIR} --config Release
+cmake --install ${BUILD_DIR} --config Release
 
+Set-Location -Path ${INSTALL_DIR}
 if ($platf -eq 'win-64'){
   $compress = @{
-    Path = Join-Path "${BUILD_DIR}" "taudem" 
+    Path = "taudem/" 
     CompressionLevel = "Fastest"
-    DestinationPath = Join-Path "${DEST_DIR}" "taudem.zip" 
+    DestinationPath = Join-Path ${DEST_DIR} "taudem.zip" 
     Update = $True 
   }
   Compress-Archive @compress
 } else {
-  tar -czvf ${DEST_DIR}/taudem-${platf}.tar.gz ${BUILD_DIR}/taudem/
+  tar -czvf ${DEST_DIR}/taudem-${platf}.tar.gz taudem/
 }
 
-#Set-Location -Path ${PRJDIR}
+Set-Location ${PRJ_DIR} 
 
+Write-Output "Finished!"
 #make -j 16 
 #make test
 #make install
