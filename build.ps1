@@ -1,6 +1,5 @@
 # Build of TauDEM for Release - archive zip
 #
-#
 function mkdir-p([string]$path)
 {
  if(Test-Path -Path $path){
@@ -13,6 +12,7 @@ function mkdir-p([string]$path)
 }
 
 $PLATFORM = "$(uname -s)"
+$platf = "win-64"
 if ($PLATFORM -eq 'Windows_NT') {
      $platf = 'win-64'
 } elseif ($PLATFORM -eq 'Linux') {
@@ -25,27 +25,27 @@ if ($PLATFORM -eq 'Windows_NT') {
 
 mkdir-p "./build-$platf"
 mkdir-p "./archive"
-
-$BUILDDIR = "./build-$platf" | Resolve-Path
-$DESTDIR = "./archive" | Resolve-Path
-$SRCDIR = "./src" | Resolve-Path
-$PRJDIR = Get-Location | Resolve-Path
+$PRJ_DIR = Get-Location | Resolve-Path
+$BUILD_DIR = "${PRJ_DIR}/build-$platf" | Resolve-Path
+$DEST_DIR = "${PRJ_DIR}/archive" | Resolve-Path
+$SRC_DIR = "${PRJ_DIR}/src" | Resolve-Path
+$INSTALL_DIR = ${BUILD_DIR} 
 
 #Set-Location -Path ${BUILDDIR}  
-cmake --install-prefix ${PRJDIR} -S ${SRCDIR} -B ${BUILDDIR} 
-cmake --build ${BUILDDIR} --target install --config Release
-cmake --install ${BUILDDIR}
+cmake --install-prefix ${BUILD_DIR} -S ${SRC_DIR} -B ${BUILD_DIR} 
+cmake --build ${BUILD_DIR} --target install --config Release
+cmake --install ${BUILD_DIR}
 
 if ($platf -eq 'win-64'){
   $compress = @{
-    Path = Join-Path "${PRJDIR}" "taudem" 
+    Path = Join-Path "${BUILD_DIR}" "taudem" 
     CompressionLevel = "Fastest"
-    DestinationPath = Join-Path "${DESTDIR}" "taudem.zip" 
+    DestinationPath = Join-Path "${DEST_DIR}" "taudem.zip" 
     Update = $True 
   }
   Compress-Archive @compress
 } else {
-  tar -czvf ${DESTDIR}/taudem-${platf}.tar.gz ${PRJDIR}/taudem/
+  tar -czvf ${DEST_DIR}/taudem-${platf}.tar.gz ${BUILD_DIR}/taudem/
 }
 
 #Set-Location -Path ${PRJDIR}
