@@ -1,6 +1,6 @@
 # Build of TauDEM for Release - archive zip
 #
-function mkdir-p([string]$path)
+function New-FolderIfNot([string]$path)
 {
  if(Test-Path -Path $path){
       Write-Host "Directory already exists."
@@ -23,16 +23,18 @@ if ($PLATFORM -eq 'Windows_NT') {
      Exit 0;
 } 
 
-mkdir-p "./build-$platf"
-mkdir-p "./archive"
+New-FolderIfNot "./build-$platf"
+New-FolderIfNot "./archive"
 $PRJ_DIR = Get-Location | Resolve-Path
 $BUILD_DIR = "${PRJ_DIR}/build-$platf" | Resolve-Path
 $DEST_DIR = "${PRJ_DIR}/archive" | Resolve-Path
 $SRC_DIR = "${PRJ_DIR}/src" | Resolve-Path
-$INSTALL_DIR = ${BUILD_DIR} 
+$INSTALL_DIR = "${BUILD_DIR}" 
 
 #Set-Location -Path ${BUILDDIR}  
-cmake --install-prefix ${BUILD_DIR} -S ${SRC_DIR} -B ${BUILD_DIR} 
+
+Write-Output "Target build dir is ${BUILD}"
+cmake --install-prefix ${INSTALL_DIR} -S ${SRC_DIR} -B ${BUILD_DIR}
 cmake --build ${BUILD_DIR} --target install --config Release
 cmake --install ${BUILD_DIR}
 
