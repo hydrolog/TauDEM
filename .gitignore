@@ -168,3 +168,5 @@ pyfiles/.idea/
 *.egg-info
 build-*/
 archive/
+pixi.lock
+.vscode/settings.json
