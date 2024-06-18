@@ -9,8 +9,10 @@ PLATFORM="$(uname -s)"
 platf="linux-64"
 if [[ $PLATFORM == "Windows_NT" ]]; then
   platf="win-64"
+  nproc=$NUMBER_OF_PROCESSORS
 elif [[ $PLATFORM == "Linux" ]]; then
   platf="linux-64"
+  nproc=$(nproc)
 elif [[ PLATFORM == "Darwin" ]]; then
   platf="osx-64"
   echo "$platf not yet supported"
@@ -18,6 +20,7 @@ elif [[ PLATFORM == "Darwin" ]]; then
 fi
 echo "Building for $platf"
 
+export CMAKE_BUILD_PARALLEL_LEVEL=$nproc
 mkdir -p ./build-$platf
 mkdir -p ./archive
 

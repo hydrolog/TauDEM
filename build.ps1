@@ -15,13 +15,18 @@ $PLATFORM = "$(uname -s)"
 $platf = "win-64"
 if ($PLATFORM -eq 'Windows_NT') {
      $platf = 'win-64'
+     $nproc = $Env:NUMBER_OF_PROCESSORS
 } elseif ($PLATFORM -eq 'Linux') {
-     $platf = 'linux-64' 
+     $platf = 'linux-64'
+     $nproc = $(nproc)
 } elseif ($PLATFORM -eq'Darwin') {
      $platf = "osx-64"
      Write-Output "$platform not yet supported"
      Exit 0;
 } 
+
+
+$Env:CMAKE_BUILD_PARALLEL_LEVEL = $nproc
 
 New-FolderIfNot "./build-$platf"
 New-FolderIfNot "./archive"
