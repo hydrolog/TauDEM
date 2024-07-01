@@ -38,7 +38,7 @@ cmake --install ${BUILD_DIR} --config Release
 
 cd $INSTALL_DIR
 if [[ $platf == "win-64" ]]; then
-  zip -r ${DEST_DIR}/taudem-${platf}.zip taudem/
+  zip -r ${DEST_DIR}/taudem-${platf}.zip . -i taudem/
 else
   tar -czvf ${DEST_DIR}/taudem-${platf}.tar.gz taudem/ 
 fi
