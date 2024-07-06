@@ -1,0 +1,6 @@
+{
+  "dependencies": [
+    "bzip2",
+    "gdal"
+  ]
+}

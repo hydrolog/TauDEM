@@ -27,7 +27,7 @@ if ($PLATFORM -eq 'Windows_NT') {
 
 
 $Env:CMAKE_BUILD_PARALLEL_LEVEL = $nproc
-
+$Env:CMAKE_GENERATOR = "Ninja"
 New-FolderIfNot "./build-$platf"
 New-FolderIfNot "./archive"
 $PRJ_DIR = Get-Location | Resolve-Path
