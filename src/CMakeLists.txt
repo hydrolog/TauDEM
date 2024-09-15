@@ -58,6 +58,8 @@ set(CMAKE_CXX_FLAG "${CMAKE_CXX_FLAG} ${MPI_COMPILE_FLAGS}")
 set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS}")
 
 # GDAL is required
+set(GDAL_DIR "${GDAL_DIR}")
+set(FindGDAL_SKIP_CONFIG 1)
 find_package(GDAL REQUIRED)
 include_directories(${GDAL_INCLUDE_DIR})
 

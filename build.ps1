@@ -11,18 +11,18 @@ function New-FolderIfNot([string]$path)
  }
 }
 
-$PLATFORM = "$(uname -s)"
 $platf = "win-64"
-if ($PLATFORM -eq 'Windows_NT') {
+
+if ($IsWindows) {
      $platf = 'win-64'
      $nproc = $Env:NUMBER_OF_PROCESSORS
-} elseif ($PLATFORM -eq 'Linux') {
+} elseif ($IsLinux) {
      $platf = 'linux-64'
      $nproc = $(nproc)
-} elseif ($PLATFORM -eq'Darwin') {
-     $platf = "osx-64"
-     Write-Output "$platform not yet supported"
-     Exit 0;
+} elseif ($MacOS) {
+     $platf = 'Darwin'
+     $nproc = $(nproc)
+     Write "Platform not yet supported!"
 } 
 
 

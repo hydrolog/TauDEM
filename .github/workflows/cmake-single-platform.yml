@@ -3,7 +3,7 @@
 name: CMake on a single platform
 
 on:
-  workflow_dispatch:
+  push:
     branches: [ "Develop" ]
 
 env:
@@ -21,10 +21,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Dependencies ACT env
+        if: ${{ env.ACT }} 
+        run: |
+          apt-get update && apt-get install sudo -y
+
       - name: Dependencies gdal and mpich
         run: |
           sudo apt-get update
-          sudo apt-get install gdal-bin libgdal-dev libmpich-dev
+          sudo apt-get install cmake clang  gdal-bin libgdal-dev libmpich-dev
  
       - name: Configure CMake
         working-directory: ${{github.workspace}}/src

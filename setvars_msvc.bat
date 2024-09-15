@@ -1,0 +1,10 @@
+SET VSINSTALLDIR="C:\Program Files\Microsoft Visual Studio\2022"
+@set "GDAL_DIR=D:\ndev\TauDEM\.pixi\envs\default\Library"
+@set "GDAL_INCLUDE_DIR=%GDAL_DIR%\include"
+@set "GDAL_LIBRARY_PATH=%GDAL_DIR%\bin\gdal.dll"
+@set "GEOS_LIBRARY_PATH=%GDAL_DIR%\bin\geos_c.dll"
+@set "LIBDIR=%GDAL_DIR%\lib"
+
+SET CMAKE_BUILD_TYPE="Release"
+@set "INCLUDE=%INCLUDE%;%GDAL_INCLUDE_DIR%"
+@set "LIB=%LIB%;%LIBDIR%"
