@@ -59,8 +59,8 @@ set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS}")
 
 # GDAL is required
 set(GDAL_DIR "${GDAL_DIR}")
-set(FindGDAL_SKIP_CONFIG 1)
-find_package(GDAL REQUIRED)
+#set(FindGDAL_SKIP_CONFIG 1)
+find_package(GDAL 3.11 REQUIRED)
 include_directories(${GDAL_INCLUDE_DIR})
 
 add_executable (aread8 ${AREAD8})
