@@ -14,6 +14,12 @@ linux =  {features = ["linux-build"], no-default-feature = true}
 scripts = ["setvars_msvc.bat"]
 
 [feature.win-build.target.win-64.tasks]
+
+#args = [
+#  { arg = "flag", default = "--prefix"},
+#  { arg = "path", default = "~/AppData/Local/taudem" }
+#]
+
 configure = { cmd = [
   "cmake.exe",
   "-GNinja",
@@ -21,14 +27,18 @@ configure = { cmd = [
   "-B./build-win-64",
 ]}
 build = {cmd = ["cmake.exe", "--build", "./build-win-64"], depends-on = ["configure"]}
+clean = {cmd = ["rm", "./build-win-64", "-r"]}
+install = {cmd = ["cmake.exe", "--install", "./build-win-64" ,"--prefix","~/AppData/Local"], depends-on = ["build"]}
 
 [feature.win-build.target.win-64.dependencies]
 ninja = ">=1.12.1"
 cmake = ">=3.30.1"
 libgdal = ">=3.9.3"
 proj = ">=9.6.1"
+cxx-compiler = ">=1.11.0,<2"
 
 [feature.linux-build.target.linux-64.tasks]
+
 configure = { cmd = [
   "cmake",
   "-GNinja",
@@ -36,13 +46,15 @@ configure = { cmd = [
   "-B./build-linux-64",
 ]}
 build = {cmd = ["cmake", "--build", "./build-linux-64"], depends-on = ["configure"]}
+clean = {cmd = ["rm","./build-linux-64","-rf"]}
+install = { cmd = ["cmake", "--install", "./build-linux-64", "--prefix", "~/.local"], depends-on = ["build"]}
 
 [feature.linux-build.target.linux-64.dependencies]
 ninja = ">=1.12.1"
 cmake = ">=3.30.1"
 libgdal = ">=3.9.3"
 proj = ">=9.6.1"
-gcc = ">=13.3.0"
 mpich-mpicxx = ">=4.2.3"
 mpich = ">=4.2.3"
+cxx-compiler = ">=1.11.0,<2"
 
