@@ -30,7 +30,7 @@ jobs:
       - name: Dependencies gdal and mpich
         run: |
           sudo apt-get update
-          sudo apt-get install cmake clang  gdal-bin libgdal-dev libmpich-dev
+          sudo apt-get install cmake gcc gdal-bin libgdal-dev libmpich-dev
  
       - name: Configure CMake
         working-directory: ${{github.workspace}}/src
