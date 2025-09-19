@@ -14,12 +14,6 @@ linux =  {features = ["linux-build"], no-default-feature = true}
 scripts = ["setvars_msvc.bat"]
 
 [feature.win-build.target.win-64.tasks]
-
-#args = [
-#  { arg = "flag", default = "--prefix"},
-#  { arg = "path", default = "~/AppData/Local/taudem" }
-#]
-
 configure = { cmd = [
   "cmake.exe",
   "-GNinja",
@@ -31,14 +25,15 @@ clean = {cmd = ["rm", "./build-win-64", "-r"]}
 install = {cmd = ["cmake.exe", "--install", "./build-win-64" ,"--prefix","~/AppData/Local"], depends-on = ["build"]}
 
 [feature.win-build.target.win-64.dependencies]
+# Use msvc toolchain (MSBuild) with windows SDK and MSMPI
+# Manual setup as host dependencies
 ninja = ">=1.12.1"
 cmake = ">=3.30.1"
-libgdal = ">=3.9.3"
-proj = ">=9.6.1"
+libgdal = ">=3.10"
+#proj = ">=9.6.1"
 cxx-compiler = ">=1.11.0,<2"
 
 [feature.linux-build.target.linux-64.tasks]
-
 configure = { cmd = [
   "cmake",
   "-GNinja",
@@ -52,8 +47,8 @@ install = { cmd = ["cmake", "--install", "./build-linux-64", "--prefix", "~/.loc
 [feature.linux-build.target.linux-64.dependencies]
 ninja = ">=1.12.1"
 cmake = ">=3.30.1"
-libgdal = ">=3.9.3"
-proj = ">=9.6.1"
+libgdal = ">=3.10"
+#proj = ">=9.6.1"
 mpich-mpicxx = ">=4.2.3"
 mpich = ">=4.2.3"
 cxx-compiler = ">=1.11.0,<2"

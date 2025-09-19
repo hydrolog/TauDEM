@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.30)
 project(TauDEM)
 
 set (CMAKE_CXX_STANDARD 11)
@@ -60,7 +60,7 @@ set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS}")
 # GDAL is required
 set(GDAL_DIR "${GDAL_DIR}")
 #set(FindGDAL_SKIP_CONFIG 1)
-find_package(GDAL 3.8 REQUIRED)
+find_package(GDAL 3.10 REQUIRED)
 include_directories(${GDAL_INCLUDE_DIR})
 
 add_executable (aread8 ${AREAD8})

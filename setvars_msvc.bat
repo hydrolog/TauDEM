@@ -1,5 +1,5 @@
-REM SET VSINSTALLDIR="C:\Program Files\Microsoft Visual Studio\2022\Community"
-@set "VSINSTALLDIR=C:\Program Files (x86)\Microsoft Visual Studio\2022"
+@set VSINSTALLDIR="C:\Program Files\Microsoft Visual Studio\2022\Community"
+REM @set "VSINSTALLDIR=C:\Program Files (x86)\Microsoft Visual Studio\2022"
 @set MSMPI
 REM @call "%VSINSTALLDIR%\Launch-VsDevShell.ps1"
 
