@@ -2,54 +2,37 @@
 name = "TauDEM"
 version = "5.3.9"
 description = "TauDEM (Terrain Analysis Using Digital Elevation Models)"
-authors = ["David Tarboton <dtarb@usu.edu"]
-channels = ["conda-forge"]
-platforms = ["linux-64","win-64"]
+authors = ["David Tarboton <dtarb@usu.edu", "Valdenor Nilo de C. Jr. <nilocj@outlook.com"]
+platforms = ["linux-64", "win-64"]
+preview = ["pixi-build"]
+channels = [
+  "https://prefix.dev/conda-forge",
+  "https://prefix.dev/pixi-build-backends",
+]
 
-[environments]
-windows = {features = ["win-build"], no-default-feature = true}
-linux =  {features = ["linux-build"], no-default-feature = true}
+[package]
+name = "taudem"
+version = "5.3.9"
+description = "TauDEM (Terrain Analysis Using Digital Elevation Models)"
 
-[feature.win-build.target.win-64.activation]
-scripts = ["setvars_msvc.bat"]
+[package.build.backend]
+name = "pixi-build-cmake"
+version = "*"
 
-[feature.win-build.target.win-64.tasks]
-configure = { cmd = [
-  "cmake.exe",
-  "-GNinja",
-  "-S./src",
-  "-B./build-win-64",
-]}
-build = {cmd = ["cmake.exe", "--build", "./build-win-64"], depends-on = ["configure"]}
-clean = {cmd = ["rm", "./build-win-64", "-r"]}
-install = {cmd = ["cmake.exe", "--install", "./build-win-64" ,"--prefix","~/AppData/Local"], depends-on = ["build"]}
+[package.host-dependencies]
+cmake = "*"
 
-[feature.win-build.target.win-64.dependencies]
-# Use msvc toolchain (MSBuild) with windows SDK and MSMPI
-# Manual setup as host dependencies
-ninja = ">=1.12.1"
-cmake = ">=3.30.1"
-libgdal = ">=3.10"
-#proj = ">=9.6.1"
+[package.build-dependencies]
+libgdal = ">=3.9.3"
+proj = ">=9.6.1"
 cxx-compiler = ">=1.11.0,<2"
 
-[feature.linux-build.target.linux-64.tasks]
-configure = { cmd = [
-  "cmake",
-  "-GNinja",
-  "-S./src",
-  "-B./build-linux-64",
-]}
-build = {cmd = ["cmake", "--build", "./build-linux-64"], depends-on = ["configure"]}
-clean = {cmd = ["rm","./build-linux-64","-rf"]}
-install = { cmd = ["cmake", "--install", "./build-linux-64", "--prefix", "~/.local"], depends-on = ["build"]}
-
-[feature.linux-build.target.linux-64.dependencies]
-ninja = ">=1.12.1"
-cmake = ">=3.30.1"
-libgdal = ">=3.10"
-#proj = ">=9.6.1"
+[target.linux-64.dependencies]
 mpich-mpicxx = ">=4.2.3"
 mpich = ">=4.2.3"
-cxx-compiler = ">=1.11.0,<2"
 
+[target.win-64.dependencies]
+msmpi = ">=10.1.1,<11"
+
+[target.win-64.activation]
+scripts = ["setvars.bat"]

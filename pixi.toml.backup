@@ -1,0 +1,69 @@
+[workspace]
+name = "TauDEM"
+version = "5.3.9"
+description = "TauDEM (Terrain Analysis Using Digital Elevation Models)"
+authors = ["David Tarboton <dtarb@usu.edu"]
+channels = ["conda-forge"]
+platforms = ["linux-64","win-64"]
+
+[environments]
+windows = {features = ["win-build"], no-default-feature = true}
+linux =  {features = ["linux-build"], no-default-feature = true}
+
+[target.win-64.activation]
+scripts = ["setvars.bat"]
+
+[feature.win-build.target.win-64.tasks]
+
+configure = { cmd = [
+  "cmake.exe",
+  "-GNinja",
+  "-S./src",
+  "-B./build-win-64",
+]}
+build = {cmd = ["cmake.exe", "--build", "./build-win-64"], depends-on = ["configure"]}
+clean = {cmd = ["rm", "./build-win-64", "-r"]}
+install = {cmd = ["cmake.exe", "--install", "./build-win-64" ,"--prefix","~/AppData/Local"], depends-on = ["build"]}
+
+[feature.win-build.target.win-64.dependencies]
+# Use msvc toolchain (MSBuild) with windows SDK and MSMPI
+# Manual setup as host dependencies
+ninja = ">=1.13.1,<2"
+cmake = ">=4.1.2,<5"
+libgdal = ">=3.11.5,<4"
+dpcpp_win-64 = ">=2025.2.0,<2026"
+dpcpp-cpp-rt = ">=2025.2.0,<2026"
+intel-sycl-rt = ">=2025.2.0,<2026"
+llvm-openmp = ">=21.1.5,<22"
+impi-devel = ">=2021.16.0,<2022"
+impi_rt = ">=2021.16.0,<2022"
+mpi4py = ">=4.1.1,<5"
+#cxx-compiler = ">=1.11.0,<2"
+#dpcpp_win-64 = ">=2025.2.0,<2026"
+#dpcpp-cpp-rt = ">=2025.2.0,<2026"
+#llvm-openmp = ">=21.1.5,<22"
+#impi-devel = ">=2021.16.0,<2022"
+#impi_rt = ">=2021.16.0,<2022"
+#mpi4py = ">=4.1.1,<5"
+
+[feature.linux-build.target.linux-64.tasks]
+configure = { cmd = [
+  "cmake",
+  "-GNinja",
+  "-S./src",
+  "-B./build-linux-64",
+]}
+build = {cmd = ["cmake", "--build", "./build-linux-64"], depends-on = ["configure"]}
+clean = {cmd = ["rm","./build-linux-64","-rf"]}
+install = { cmd = ["cmake", "--install", "./build-linux-64", "--prefix", "~/.local"], depends-on = ["build"]}
+
+[feature.linux-build.target.linux-64.dependencies]
+ninja = ">=1.13.1,<2"
+cmake = ">=4.1.2,<5"
+libgdal = ">=3.11.5,<4"
+mpich-mpicxx = ">=4.3.2,<5"
+mpich = ">=4.3.2,<5"
+cxx-compiler = ">=1.11.0,<2"
+
+
+
