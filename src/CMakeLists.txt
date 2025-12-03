@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
 project(TauDEM)
-
 set (CMAKE_CXX_STANDARD 11)
 
 set (shape_srcs ReadOutlets.cpp)
@@ -53,28 +52,40 @@ set (SINMAPSI SinmapSImn.cpp SinmapSI.cpp ${common_srcs})
 
 # MPI is required
 find_package(MPI REQUIRED COMPONENTS CXX)
-include_directories(${MPI_INCLUDE_PATH})
+# Prefer the modern imported target when available; otherwise fall back to legacy variables.
 if(TARGET MPI::MPI_CXX)
     set(MPI_LINK_LIBRARIES MPI::MPI_CXX)
+    # Imported target carries include directories, no need to call include_directories here.
 else()
+    # Some CMake/FindMPI versions provide MPI_CXX_INCLUDE_DIRS or MPI_INCLUDE_PATH.
+    if(DEFINED MPI_CXX_INCLUDE_DIRS)
+        include_directories(${MPI_CXX_INCLUDE_DIRS})
+    elseif(DEFINED MPI_INCLUDE_PATH)
+        include_directories(${MPI_INCLUDE_PATH})
+    endif()
     set(MPI_LINK_LIBRARIES ${MPI_LIBRARIES})
 endif()
 
 # GDAL is required
-find_package(GDAL 3.10 REQUIRED)
-if(DEFINED GDAL_INCLUDE_DIRS)
-    include_directories(${GDAL_INCLUDE_DIRS})
-elseif(DEFINED GDAL_INCLUDE_DIR)
-    include_directories(${GDAL_INCLUDE_DIR})
-endif()
+# Avoid pinning a specific GDAL version here unless you need to enforce it.
+find_package(GDAL REQUIRED)
+# If the modern imported target exists, use it (it supplies include directories and link info).
 if(TARGET GDAL::GDAL)
     set(GDAL_LINK_LIBRARIES GDAL::GDAL)
-elseif(DEFINED GDAL_LIBRARIES)
-    set(GDAL_LINK_LIBRARIES ${GDAL_LIBRARIES})
-elseif(DEFINED GDAL_LIBRARY)
-    set(GDAL_LINK_LIBRARIES ${GDAL_LIBRARY})
 else()
-    message(FATAL_ERROR "GDAL libraries not found")
+    # Fall back to older variables provided by FindGDAL.
+    if(DEFINED GDAL_INCLUDE_DIRS)
+        include_directories(${GDAL_INCLUDE_DIRS})
+    elseif(DEFINED GDAL_INCLUDE_DIR)
+        include_directories(${GDAL_INCLUDE_DIR})
+    endif()
+    if(DEFINED GDAL_LIBRARIES)
+        set(GDAL_LINK_LIBRARIES ${GDAL_LIBRARIES})
+    elseif(DEFINED GDAL_LIBRARY)
+        set(GDAL_LINK_LIBRARIES ${GDAL_LIBRARY})
+    else()
+        message(FATAL_ERROR "GDAL libraries not found")
+    endif()
 endif()
 
 add_executable (aread8 ${AREAD8})

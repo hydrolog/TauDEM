@@ -164,9 +164,10 @@ Taudem5PCVS2015/Taudem5PC.VC.db
 pyfiles/.idea/
 *.db
 # pixi environments
+*.conda
 .pixi
 *.egg-info
 build-*/
 archive/
 pixi.lock
-.vscode/settings.json
+.vscode/*
