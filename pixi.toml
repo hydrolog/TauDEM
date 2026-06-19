@@ -105,4 +105,4 @@ configure = { cmd = [
 build = { cmd = ["cmake.exe", "--build", "./build-win-64"], depends-on = ["configure"] }
 clean = {cmd = ["rm", "./build-win-64", "-r"]}
 install = {cmd = ["cmake.exe", "--install", "./build-win-64" ,"--prefix","~/AppData/Local"], depends-on = ["build"]}
-pixi-build = { cmd = ["pixi", "build", "--output-dir", "./build-win-64", "--clean", "--target-platform", "win-64"] }
+pixi-build = { cmd = ["pixi", "build", "--output-dir", "./build-win-64", "--target-platform", "win-64"] }
