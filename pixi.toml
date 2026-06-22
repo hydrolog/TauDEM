@@ -85,7 +85,7 @@ scripts = ["setvars.bat"]
 configure = { cmd = [
   "cmake",
   "-GNinja",
-  "-S./.,
+  "-S./.",
   "-B./build-linux-64",
 ]}
 build = {cmd = ["cmake", "--build", "build-linux-64"], depends-on = ["configure"]}
@@ -97,7 +97,7 @@ pixi-build = { cmd = ["pixi", "build", "--output-dir","./build-linux-64", "--tar
 configure = { cmd = [
   "cmake.exe",
   "-GNinja",
-  "-S./.,
+  "-S./.",
   "-B./build-win-64",
   "-DCMAKE_LIBRARY_PATH=$MSMPI_LIB64",
   "-DMPI_CXX_ADDITIONAL_INCLUDE_DIRS=$MSMPI_INC",
