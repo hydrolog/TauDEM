@@ -1,3 +1,5 @@
+cmake_minimum_required (VERSION 4.3)
+
 # Update to C++17 for filesystem support
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

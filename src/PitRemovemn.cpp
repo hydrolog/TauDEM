@@ -56,23 +56,23 @@ int main(int argc,char **argv)
    bool use_mask = false; // flag to specify the optional mask file, arb 5/31/11
    
    if(argc < 2)
-   {  
-     printf("Error: To run this program, use either the Simple Usage option or\n");
+    {  
+       printf("Error: To run this program, use either the Simple Usage option or\n");
 	   printf("the Usage with Specific file names option\n");
 	   goto errexit; 
-   }
+    }
+
    else if(argc > 2)
-   {
+	{
 		i = 1;
 //		printf("You are running %s with the Specific File Names Usage option.\n", argv[0]);
-	 }
-	 else {
+	}
+	else {
 		i = 2;
 //		printf("You are running %s with the Simple Usage option.\n", argv[0]);
-	 }
-	
-   while(argc > i)
-	 {
+	}
+	while(argc > i)
+	{
 		if(strcmp(argv[i],"-z")==0)
 		{
 			i++;
@@ -156,23 +156,10 @@ int main(int argc,char **argv)
 
 errexit:
 	// 5/11/23 dgt Fixing usage text (noting that sfdr option is currently commented out in main code)
-	   printf("Simple use:\n %s <demfile>\n",argv[0]);
-	   printf("Simple use takes as input just the input DEM file name and the name of the output file is\n");
-	   printf("created by inserting 'fel' into the input file name.\n");
-	   printf("It is not possible to use a depression mask, or specify 4 way pit removal with the simple input pattern.\n\n");
-	   
-	   printf("General use with specific file names:\n %s -z <demfile> ",argv[0]);
-           printf("-fel <newfile> [-depmask <maskfile>] [ -4way] [-v] \n");
-	   printf("General use requires specification of the file name for each input/output, preceded by a flag indicating\n");
-	   printf("the file content.\n");
-	   printf("<demfile> is the name of the input elevation grid file.\n");
-	   printf("<newfile> is the output elevation grid with pits filled.\n");
-	   //printf("<flowfile> (optional) is the input grid of flow directions to be imposed.\n");
-	   printf("<depmaskfile> is depression mask indicator grid.\n");
-	   printf("-4way (optional) is flag to set 4 way depression filling.\n");
-           printf("-v (optional) is flag to set verbose (more detailed) output messages.\n");
-       exit(0);
-}
+	printf("Simple use:\n %s <demfile>\n",argv[0]);
+	printf("Simple use takes as input just the input DEM file name and the name of the output file is\n");
+	printf("created by inserting 'fel' into the input file name.\n");
+	printf("It is not possible to use a depression mask, or specify 4 way pit removal with the simple input pattern.\n\n");
 
 	printf("General use with specific file names:\n %s -z <demfile> ",argv[0]);
     printf("-fel <newfile> [-depmask <maskfile>] [ -4way] [-v] \n");
