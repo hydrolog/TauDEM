@@ -29,8 +29,8 @@ path = "src"
 
 [package.build.target.win-64.config]
 extra-args = [
-  "-DCMAKE_LIBRARY_PATH=N:/ndev/TauDEM/.pixi/envs/default/Library/lib",
-  "-DMPI_CXX_ADDITIONAL_INCLUDE_DIRS=N:/ndev/TauDEM/.pixi/envs/default/Library/include",
+  "-DCMAKE_LIBRARY_PATH=.pixi/envs/default/Library/lib",
+  "-DMPI_CXX_ADDITIONAL_INCLUDE_DIRS=.pixi/envs/default/Library/include",
 ]
 
 [package.build.target.linux-64.config]
