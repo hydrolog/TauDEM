@@ -1,5 +1,3 @@
-cmake_minimum_required (VERSION 4.3)
-
 # Update to C++17 for filesystem support
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -177,7 +175,26 @@ set (MY_TARGETS aread8
                 sinmapsi
                 inundepth)
 
+
 foreach(c_target ${MY_TARGETS})
-    target_link_libraries(${c_target} PRIVATE ${MPI_LINK_LIBRARIES} ${GDAL_LINK_LIBRARIES})
+    # Link the target to MPI and GDAL
+    if(TARGET GDAL::GDAL)
+        # Modern GDAL target (from CONFIG mode)
+        target_link_libraries(${c_target} PRIVATE ${MPI_LIBRARIES} GDAL::GDAL)
+    else()
+        # Old-style GDAL variables (from MODULE mode)
+        target_link_libraries(${c_target} PRIVATE ${MPI_LIBRARIES} ${GDAL_LIBRARY})
+    endif()
+    
+    # Add MPI include directories
+    target_include_directories(${c_target} PRIVATE ${MPI_INCLUDE_PATH})
+    
+    # Add MPI compile flags
+    target_compile_options(${c_target} PRIVATE ${MPI_COMPILE_FLAGS})
+    
+    # Add MPI link flags
+    target_link_libraries(${c_target} PRIVATE ${MPI_LINK_FLAGS})
+
+    # Install the targets to the 'taudem' directory
     install(TARGETS ${c_target} DESTINATION taudem)
 endforeach()
