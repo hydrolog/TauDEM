@@ -1,6 +1,11 @@
-cmake_minimum_required(VERSION 3.30)
-project(TauDEM)
-set (CMAKE_CXX_STANDARD 11)
+# Update to C++17 for filesystem support
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Add filesystem library for older compilers
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.1)
+    link_libraries(stdc++fs)
+endif()
 
 set (shape_srcs ReadOutlets.cpp)
 set (common_srcs commonLib.cpp tiffIO.cpp)
@@ -50,20 +55,27 @@ set (RETLIMFLOW RetLimFlowmn.cpp RetlimFlow.cpp ${common_srcs})
 set (SETREGION SetRegionmn.cpp SetRegion.cpp ${common_srcs})
 set (SINMAPSI SinmapSImn.cpp SinmapSI.cpp ${common_srcs})
 
-# MPI is required
-find_package(MPI REQUIRED COMPONENTS CXX)
-# Prefer the modern imported target when available; otherwise fall back to legacy variables.
-if(TARGET MPI::MPI_CXX)
-    set(MPI_LINK_LIBRARIES MPI::MPI_CXX)
-    # Imported target carries include directories, no need to call include_directories here.
-else()
-    # Some CMake/FindMPI versions provide MPI_CXX_INCLUDE_DIRS or MPI_INCLUDE_PATH.
-    if(DEFINED MPI_CXX_INCLUDE_DIRS)
-        include_directories(${MPI_CXX_INCLUDE_DIRS})
-    elseif(DEFINED MPI_INCLUDE_PATH)
-        include_directories(${MPI_INCLUDE_PATH})
+# MPI configuration for Windows
+if(WIN32)
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(MS_MPI_ARCH_DIR "x64")
+    else()
+        set(MS_MPI_ARCH_DIR "x86")
     endif()
-    set(MPI_LINK_LIBRARIES ${MPI_LIBRARIES})
+    
+    # Try to find MS-MPI through vcpkg first
+    find_package(MPI)
+    
+    if(NOT MPI_FOUND)
+        # Fallback to standard MS-MPI paths
+        set(MPI_C_INCLUDE_PATH "C:/Program Files (x86)/Microsoft SDKs/MPI/Include")
+        set(MPI_CXX_INCLUDE_PATH "C:/Program Files (x86)/Microsoft SDKs/MPI/Include")
+        set(MPI_C_LIBRARIES "C:/Program Files (x86)/Microsoft SDKs/MPI/Lib/${MS_MPI_ARCH_DIR}/msmpi.lib")
+        set(MPI_CXX_LIBRARIES "C:/Program Files (x86)/Microsoft SDKs/MPI/Lib/${MS_MPI_ARCH_DIR}/msmpi.lib")
+    endif()
+else()
+    # Non-Windows platforms
+    find_package(MPI REQUIRED)
 endif()
 
 # GDAL is required
