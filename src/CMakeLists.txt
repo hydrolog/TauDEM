@@ -54,6 +54,7 @@ set (FLOWDIRCOND flowdirconditionmn.cpp flowdircond.cpp ${common_srcs})
 set (RETLIMFLOW RetLimFlowmn.cpp RetlimFlow.cpp ${common_srcs})
 set (SETREGION SetRegionmn.cpp SetRegion.cpp ${common_srcs})
 set (SINMAPSI SinmapSImn.cpp SinmapSI.cpp ${common_srcs})
+set (INUNDEPTH InunDepthmn.cpp InunDepth.cpp ${common_srcs})
 
 # MPI configuration for Windows
 if(WIN32)
@@ -78,27 +79,27 @@ else()
     find_package(MPI REQUIRED)
 endif()
 
-# GDAL is required
-# Avoid pinning a specific GDAL version here unless you need to enforce it.
-find_package(GDAL REQUIRED)
-# If the modern imported target exists, use it (it supplies include directories and link info).
-if(TARGET GDAL::GDAL)
-    set(GDAL_LINK_LIBRARIES GDAL::GDAL)
+include_directories(${MPI_INCLUDE_PATH})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_COMPILE_FLAGS}")
+set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS}")
+
+# GDAL is required - try CONFIG mode first (for vcpkg)
+find_package(GDAL CONFIG QUIET)
+if(NOT GDAL_FOUND)
+    # Fall back to MODULE mode if CONFIG mode fails
+    message(STATUS "GDAL CONFIG mode failed, trying MODULE mode...")
+    find_package(GDAL REQUIRED)
+    include_directories(${GDAL_INCLUDE_DIR})
+    message(STATUS "Found GDAL using MODULE mode: ${GDAL_VERSION}")
 else()
-    # Fall back to older variables provided by FindGDAL.
-    if(DEFINED GDAL_INCLUDE_DIRS)
-        include_directories(${GDAL_INCLUDE_DIRS})
-    elseif(DEFINED GDAL_INCLUDE_DIR)
-        include_directories(${GDAL_INCLUDE_DIR})
-    endif()
-    if(DEFINED GDAL_LIBRARIES)
-        set(GDAL_LINK_LIBRARIES ${GDAL_LIBRARIES})
-    elseif(DEFINED GDAL_LIBRARY)
-        set(GDAL_LINK_LIBRARIES ${GDAL_LIBRARY})
-    else()
-        message(FATAL_ERROR "GDAL libraries not found")
-    endif()
+    message(STATUS "Found GDAL using CONFIG mode: ${GDAL_VERSION}")
 endif()
+
+find_package(MPI)
+message(STATUS "MPI_FOUND: ${MPI_FOUND}")
+message(STATUS "MPI_LIBRARIES: ${MPI_LIBRARIES}")
+message(STATUS "MPI_C_LIBRARIES: ${MPI_C_LIBRARIES}")
+message(STATUS "MPI_CXX_LIBRARIES: ${MPI_CXX_LIBRARIES}")
 
 add_executable (aread8 ${AREAD8})
 add_executable (areadinf ${AREADINF})
@@ -117,7 +118,7 @@ add_executable (dinfupdependence ${DINFUPDEPEND})
 add_executable (dropanalysis ${DROPANALYSIS})
 add_executable (gridnet ${GRIDNET})
 add_executable (lengtharea ${LENGTHAREA})
-add_executable (moveoutletstostrm ${MVOUTLETSTOSTRM})
+add_executable (moveoutletstostreams ${MVOUTLETSTOSTRM})
 add_executable (peukerdouglas ${PEUKERDOUGLAS})
 add_executable (pitremove ${PITREMOVE})
 add_executable (slopearea ${SLOPEAREA})
@@ -135,6 +136,7 @@ add_executable (flowdircond ${FLOWDIRCOND})
 add_executable (retlimflow ${RETLIMFLOW})
 add_executable (setregion ${SETREGION})
 add_executable (sinmapsi ${SINMAPSI})
+add_executable (inundepth ${INUNDEPTH})
 
 set (MY_TARGETS aread8
                 areadinf
@@ -153,7 +155,7 @@ set (MY_TARGETS aread8
                 dropanalysis
                 gridnet
                 lengtharea
-                moveoutletstostrm
+                moveoutletstostreams
                 peukerdouglas
                 pitremove
                 slopearea
@@ -170,7 +172,8 @@ set (MY_TARGETS aread8
                 flowdircond
                 retlimflow
                 setregion
-                sinmapsi)
+                sinmapsi
+                inundepth)
 
 foreach(c_target ${MY_TARGETS})
     target_link_libraries(${c_target} PRIVATE ${MPI_LINK_LIBRARIES} ${GDAL_LINK_LIBRARIES})

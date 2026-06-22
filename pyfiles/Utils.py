@@ -1,8 +1,11 @@
 __author__ = 'Pabitra'
 
 from collections import namedtuple
-from osgeo import gdal, osr
-from gdalconst import *
+import os
+import subprocess
+
+from osgeo import gdal
+from osgeo.gdalconst import GA_ReadOnly
 import numpy as np
 
 NO_DATA_VALUE = -9999
@@ -47,16 +50,94 @@ def initialize_output_raster_file(base_raster_file, output_raster_file, initial_
         grid_initial_data = np.zeros((rows, cols), dtype=np.float32)
         grid_initial_data[:] = float(initial_data)
     else:
-        grid_initial_data = np.zeros((rows, cols), dtype=np.int)
+        grid_initial_data = np.zeros((rows, cols), dtype=np.int32)
         grid_initial_data[:] = int(initial_data)
 
     outband = outRaster.GetRasterBand(1)
     outband.SetNoDataValue(NO_DATA_VALUE)
     outband.WriteArray(grid_initial_data)
 
-    # set the projection of the tif file same as that of the base_raster file
-    outRasterSRS = osr.SpatialReference()
-    outRasterSRS.ImportFromWkt(base_raster.GetProjectionRef())
-    outRaster.SetProjection(outRasterSRS.ExportToWkt())
+    # Set projection from the source raster without reparsing WKT because
+    # some ArcGIS binary DEM projections can fail ImportFromWkt with corrupt data errors.
+    source_srs = base_raster.GetSpatialRef() if hasattr(base_raster, 'GetSpatialRef') else None
+    if source_srs:
+        # GetSpatialRef is the preferred modern GDAL path and returns a spatial reference object that we export to WKT
+        outRaster.SetProjection(source_srs.ExportToWkt())
+    else:
+        # GetProjectionRef is retained only as a fallback for datasets/drivers where no spatial reference object is exposed
+        # Rely on dataset's raw projection string
+        source_wkt = base_raster.GetProjectionRef()
+        if source_wkt and source_wkt.strip():
+            outRaster.SetProjection(source_wkt)
 
     outRaster = None
+
+
+def get_adjusted_env():
+    # Modify environment to remove ArcGIS paths from PATH to prevent GDAL version conflicts
+    # This ensures TauDEM tools like pitremove use the system/TauDEM GDAL instead of ArcGIS's GDAL
+    env = os.environ.copy()
+    if 'PATH' in env:
+        path_dirs = env['PATH'].split(os.pathsep)
+        # Filter out any paths containing 'ArcGIS' (case-insensitive)
+        clean_path_dirs = [p for p in path_dirs if 'arcgis' not in p.lower()]
+        env['PATH'] = os.pathsep.join(clean_path_dirs)
+
+    # Remove GDAL_DATA, PROJ_LIB, and GDAL_DRIVER_PATH if they refer to ArcGIS paths
+    # This prevents version mismatch errors where TauDEM's GDAL tries to read ArcGIS's GDAL data files or plugins
+    for var in ['GDAL_DATA', 'PROJ_LIB', 'GDAL_DRIVER_PATH']:
+        if var in env and 'arcgis' in env[var].lower():
+            del env[var]
+
+    return env
+
+
+def run_taudem_command(cmd, msg_callback=None):
+    """
+    Runs a TauDEM command using subprocess, handling environment variables and output filtering.
+
+    :param cmd: The command string to execute.
+    :param msg_callback: A function to call with output messages (e.g., arcpy.AddMessage).
+    :return: The return code of the process.
+    """
+    env = get_adjusted_env()
+
+    # NOTE: Pabitra: Originally (prior to TauDEM 5.4.0) os.system(cmd) was used to display the Windows command prompt window.
+    # However, this fails now as it can't find the GDAL modules and we can't pass the environment (env) variables to it.
+    # os.system(cmd)
+
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=env)
+    stdout, stderr = process.communicate()
+
+    if stdout and msg_callback:
+        for line in stdout.splitlines():
+            msg_callback(line.rstrip())
+            msg_callback("\n")
+
+    if stderr:
+        filtered_stderr = []
+        patterns = [
+            "This run may take on the order of",
+            "This estimate is very approximate",
+            "Run time is highly uncertain",
+            "speed and memory of the computer",
+            "dual quad core Dell Xeon"
+        ]
+        for line in stderr.strip().split('\n'):
+            if not line.strip():
+                continue
+            if any(pattern in line for pattern in patterns):
+                # this is not really an error, so don't include it in filtered_stderr
+                if msg_callback:
+                    msg_callback(line)
+                    msg_callback("\n")
+                continue
+            filtered_stderr.append(line)
+
+        if filtered_stderr and msg_callback:
+            msg_callback('\nERROR OUTPUT:')
+            for line in filtered_stderr:
+                msg_callback(line)
+                msg_callback("\n")
+
+    return process.returncode
