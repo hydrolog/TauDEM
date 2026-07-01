@@ -45,38 +45,38 @@ libgdal = ">=3.10"
 [package.host-dependencies]
 libgdal = ">=3.10"
 
-[package.target.linux-64.host-dependencies]
+[package.host-dependencies."if(host_platform == 'linux-64')"]
 mpich-mpicxx = ">=4.3.2,<5"
 mpich = ">=4.3.2,<5"
 
-[package.target.linux-64.build-dependencies]
+[package.build-dependencies."if(host_platform == 'linux-64')"]
 mpich-mpicxx = ">=4.3.2,<5"
 mpich = ">=4.3.2,<5"
 
-[package.target.linux-64.run-dependencies]
+[package.run-dependencies."if(host_platform == 'linux-64')"]
 mpich = ">=4.3.2,<5"
 
-[package.target.win-64.host-dependencies]
+[package.host-dependencies."if(host_platform == 'win-64')"]
 msmpi = ">=10.1.1,<11"
 
-[package.target.win-64.build-dependencies]
+[package.build-dependencies."if(host_platform == 'win-64')"]
 msmpi = ">=10.1.1,<11"
 
-[package.target.win-64.run-dependencies]
+[package.run-dependencies."if(host_platform == 'win-64')"]
 msmpi = ">=10.1.1,<11"
 
 [target.linux-64.dependencies]
-mpich-mpicxx = ">=4.3.2,<5"
-mpich = ">=4.3.2,<5"
+mpich-mpicxx = ">=5.0.1,<6"
+mpich = ">=5.0.1,<6"
 
 [target.win-64.dependencies]
 msmpi = ">=10.1.1,<11"
 cxx-compiler = ">=1.11.0,<2"
 
 [dependencies]
-cmake = ">=4.1.2,<5"
-libgdal = ">=3.11.5,<4"
-ninja = ">=1.13.1,<2"
+cmake = ">=4.3.4,<5"
+libgdal = ">=3.13.1,<4"
+ninja = ">=1.13.2,<2"
 
 [target.win-64.activation]
 scripts = ["setvars.bat"]
