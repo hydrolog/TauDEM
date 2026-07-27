@@ -1,6 +1,6 @@
 @set VSINSTALLDIR="C:\Program Files\Microsoft Visual Studio\2022\Community"
 
-REM @set MSMPI 
+REM @set MSMPI
 REM Resultado do comando set MSMPI nao inclui %CONDA_PREFIX% do ambiente atual
 REM
 @set "MSMPI_BIN=%CONDA_PREFIX%\Library\bin
