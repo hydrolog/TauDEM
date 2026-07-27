@@ -1,4 +1,10 @@
 # Auto detect text files and perform LF normalization
+# GitHub syntax highlighting
+pixi.lock linguist-language=YAML linguist-generated=true
+* text=auto eol=lf
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
+
 * text=auto
 
 # Custom for Visual Studio
@@ -20,3 +26,17 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+# GitHub syntax highlighting
+pixi.lock linguist-language=YAML
+
+# binary
+*.png binary
+*.jpg binary
+*.tif binary
+*.nc binary
+*.shp binary
+*.dbf binary
+*.shx binary
+*.gdb binary
+*.gdb binary
+*.zip binary
