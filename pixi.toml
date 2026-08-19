@@ -25,7 +25,7 @@ extra-args = [
 extra-input-globs = [ "src/**" ]
 
 [package.build.source]
-path = "src"
+path = "./."
 
 [package.build.target.win-64.config]
 extra-args = [
@@ -91,7 +91,7 @@ configure = { cmd = [
 build = {cmd = ["cmake", "--build", "build-linux-64"], depends-on = ["configure"]}
 clean = {cmd = ["rm","build-linux-64","-rf"]}
 install = { cmd = ["cmake", "--install", "build-linux-64", "--prefix", "~/.local"], depends-on = ["build"]}
-pixi-build = { cmd = ["pixi", "build", "--output-dir","./build-linux-64", "--target-platform", "linux-64"] }
+pp = { cmd = ["pixi", "publish", "--path","./.", "--target-platform", "linux-64", "--clean"] }
 
 [target.win-64.tasks]
 configure = { cmd = [
@@ -105,4 +105,4 @@ configure = { cmd = [
 build = { cmd = ["cmake.exe", "--build", "./build-win-64"], depends-on = ["configure"] }
 clean = {cmd = ["rm", "./build-win-64", "-r"]}
 install = {cmd = ["cmake.exe", "--install", "./build-win-64" ,"--prefix","~/AppData/Local"], depends-on = ["build"]}
-pixi-build = { cmd = ["pixi", "build", "--output-dir", "./build-win-64", "--target-platform", "win-64"] }
+pp = { cmd = ["pixi", "publish", "--path", "./.", "--target-platform", "win-64", "--clean"] }
