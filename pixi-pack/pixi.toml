@@ -1,0 +1,60 @@
+[workspace]
+preview = ["pixi-build"]
+channels = ["https://prefix.dev/conda-forge",
+"https://prefix.dev/pixi-build-backends",]
+platforms = ["win-64", "linux-64"]
+
+[package.build.source]
+path = "../."
+
+[target.linux-64.tasks]
+bld = { cmd = ["pixi", "publish", "--path", ".", "--target-platform", "linux-64", "--clean", "--package-format", "tar-bz2"]}
+ppack = { cmd = ["pixi-pack", "--create-executable", "--platform", "linux-64", "pixi.toml"]}
+
+[target.win-64.tasks]
+bld = { cmd = ["pixi", "publish", "--path", ".", "--target-platform", "win-64", "--clean", "--package-format", "tar-bz2"] }
+ppack = { cmd = ["pixi-pack", "--create-executable", "--platform", "win-64", "pixi.toml"] }
+
+[dependencies]
+libgdal = ">=3.13.3,<4"
+
+[package]
+name = "taudem"
+version = "5.5.0"
+description = "TauDEM (Terrain Analysis Using Digital Elevation Models)"
+authors = ["https://prefix.dev/pixi-build-backends"]
+
+[package.build]
+backend = { name = "pixi-build-cmake", version = "*" }
+
+[package.build.config]
+extra-args = [
+  "-DCMAKE_BUILD_TYPE=Release"
+]
+
+[package.host-dependencies."if(host_platform == 'linux-64')"]
+libgdal = ">=3.13.3,<4"
+mpich = ">=5.0.1,<6"
+mpich-mpicxx = ">=5.0.1,<6"
+
+[package.build-dependencies."if(host_platform == 'linux-64')"]
+libgdal = ">=3.13.3,<4"
+mpich = ">=5.0.1,<6"
+mpich-mpicxx = ">=5.0.1,<6"
+
+[package.host-dependencies."if(host_platform == 'win-64')"]
+libgdal = ">=3.13.3,<4"
+msmpi = ">=10.1.1,<11"
+mpi = ">=1.0,<2"
+
+[package.build-dependencies."if(host_platform == 'win-64')"]
+libgdal = ">=3.13.3,<4"
+msmpi = ">=10.1.1,<11"
+mpi = ">=1.0,<2"
+
+[target.linux-64.dependencies]
+mpich = ">=5.0.1,<6"
+
+[target.win-64.dependencies]
+msmpi = ">=10.1.1,<11"
+mpi = ">=1.0,<2"

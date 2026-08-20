@@ -71,11 +71,11 @@ mpich = ">=5.0.1,<6"
 
 [target.win-64.dependencies]
 msmpi = ">=10.1.1,<11"
-cxx-compiler = ">=1.11.0,<2"
+cxx-compiler = ">=2.0.0,<3"
 
 [dependencies]
-cmake = ">=4.4.0,<5"
-libgdal = ">=3.13.2,<4"
+cmake = ">=4.4.2,<5"
+libgdal = ">=3.13.3,<4"
 ninja = ">=1.13.2,<2"
 
 [target.win-64.activation]
