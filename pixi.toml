@@ -1,0 +1,108 @@
+[workspace]
+name = "TauDEM"
+version = "5.3.9"
+description = "TauDEM (Terrain Analysis Using Digital Elevation Models)"
+authors = ["David Tarboton <dtarb@usu.edu"]
+platforms = ["linux-64", "win-64"]
+preview = ["pixi-build"]
+channels = [
+  "https://prefix.dev/conda-forge",
+  "https://prefix.dev/pixi-build-backends",
+]
+
+[package]
+name = "taudem"
+version = "5.3.9"
+description = "TauDEM (Terrain Analysis Using Digital Elevation Models)"
+
+[package.build]
+backend = { name = "pixi-build-cmake", version = "*" }
+
+[package.build.config]
+extra-args = [
+  "-DCMAKE_BUILD_TYPE=Release"
+]
+extra-input-globs = [ "src/**" ]
+
+[package.build.source]
+path = "src"
+
+[package.build.target.win-64.config]
+extra-args = [
+  "-DCMAKE_LIBRARY_PATH=.pixi/envs/default/Library/lib",
+  "-DMPI_CXX_ADDITIONAL_INCLUDE_DIRS=.pixi/envs/default/Library/include",
+]
+
+[package.build.target.linux-64.config]
+#extra-args 
+
+[package.build-dependencies]
+libgdal = ">=3.10"
+
+[package.run-dependencies]
+libgdal = ">=3.10"
+
+[package.host-dependencies]
+libgdal = ">=3.10"
+
+[package.host-dependencies."if(host_platform == 'linux-64')"]
+mpich-mpicxx = ">=4.3.2,<5"
+mpich = ">=4.3.2,<5"
+
+[package.build-dependencies."if(host_platform == 'linux-64')"]
+mpich-mpicxx = ">=4.3.2,<5"
+mpich = ">=4.3.2,<5"
+
+[package.run-dependencies."if(host_platform == 'linux-64')"]
+mpich = ">=4.3.2,<5"
+
+[package.host-dependencies."if(host_platform == 'win-64')"]
+msmpi = ">=10.1.1,<11"
+
+[package.build-dependencies."if(host_platform == 'win-64')"]
+msmpi = ">=10.1.1,<11"
+
+[package.run-dependencies."if(host_platform == 'win-64')"]
+msmpi = ">=10.1.1,<11"
+
+[target.linux-64.dependencies]
+mpich-mpicxx = ">=5.0.1,<6"
+mpich = ">=5.0.1,<6"
+
+[target.win-64.dependencies]
+msmpi = ">=10.1.1,<11"
+cxx-compiler = ">=1.11.0,<2"
+
+[dependencies]
+cmake = ">=4.3.4,<5"
+libgdal = ">=3.13.1,<4"
+ninja = ">=1.13.2,<2"
+
+[target.win-64.activation]
+scripts = ["setvars.bat"]
+
+[target.linux-64.tasks]
+configure = { cmd = [
+  "cmake",
+  "-GNinja",
+  "-S./.",
+  "-B./build-linux-64",
+]}
+build = {cmd = ["cmake", "--build", "build-linux-64"], depends-on = ["configure"]}
+clean = {cmd = ["rm","build-linux-64","-rf"]}
+install = { cmd = ["cmake", "--install", "build-linux-64", "--prefix", "~/.local"], depends-on = ["build"]}
+pixi-build = { cmd = ["pixi", "build", "--output-dir","./build-linux-64", "--target-platform", "linux-64"] }
+
+[target.win-64.tasks]
+configure = { cmd = [
+  "cmake.exe",
+  "-GNinja",
+  "-S./.",
+  "-B./build-win-64",
+  "-DCMAKE_LIBRARY_PATH=$MSMPI_LIB64",
+  "-DMPI_CXX_ADDITIONAL_INCLUDE_DIRS=$MSMPI_INC",
+]}
+build = { cmd = ["cmake.exe", "--build", "./build-win-64"], depends-on = ["configure"] }
+clean = {cmd = ["rm", "./build-win-64", "-r"]}
+install = {cmd = ["cmake.exe", "--install", "./build-win-64" ,"--prefix","~/AppData/Local"], depends-on = ["build"]}
+pixi-build = { cmd = ["pixi", "build", "--output-dir", "./build-win-64", "--target-platform", "win-64"] }

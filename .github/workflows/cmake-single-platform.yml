@@ -3,13 +3,14 @@
 name: CMake on a single platform
 
 on:
-  workflow_dispatch:
+#  push:
+ workflow_dispatch:
     branches: [ "Develop" ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-
+  
 jobs:
   build:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
@@ -21,10 +22,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Dependencies ACT env
+        if: ${{ env.ACT }} 
+        run: |
+          apt-get update && apt-get install sudo -y
+
       - name: Dependencies gdal and mpich
         run: |
           sudo apt-get update
-          sudo apt-get install gdal-bin libgdal-dev libmpich-dev
+          sudo apt-get install cmake gcc gdal-bin libgdal-dev libmpich-dev
  
       - name: Configure CMake
         working-directory: ${{github.workspace}}/src
@@ -44,10 +50,10 @@ jobs:
         run: ctest -C ${{env.BUILD_TYPE}}
       
       - name: 'Tar files'
-        run: tar -cvf taudem.tar ${{github.workspace}}/build
+        run: tar -cvf taudem-linux-x86_64.tar ${{github.workspace}}/build
 
       - name: 'Upload Artifacts'
         uses: actions/upload-artifact@v4
         with:
-          name: taudem-install
-          path: taudem.tar
+          name: taudem-linux-x86_64
+          path: taudem-linux-x86_64.tar

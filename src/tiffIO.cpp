@@ -86,7 +86,7 @@ tiffIO::tiffIO(char *fname, DATA_TYPE newtype) {
 	ss=OSRGetLinearUnits(hSRS,&test_unit); // provide linear units
 	//cout<<ss<<endl;// for test
 	bandh = GDALGetRasterBand(fh, 1);
-	valueUnit=GDALGetRasterUnitType(fh); // provide value units
+	valueUnit=GDALGetRasterUnitType(bandh); // provide value units
 	//cout<<valueUnit<<endl; // for test
 
 	totalX = GDALGetRasterXSize(fh);
@@ -157,7 +157,14 @@ tiffIO::tiffIO(char *fname, DATA_TYPE newtype) {
     datatype = newtype;
 	//GDALDataType gdfiledt;
 	//gdfiledt = GDALGetRasterDataType(bandh);
-	nodata = GDALGetRasterNoDataValue(bandh, NULL); // noDatarefactor 11/18/17
+	
+	int pbSuccess = FALSE;
+	nodata = GDALGetRasterNoDataValue(bandh, &pbSuccess);
+
+	if (!pbSuccess) {
+    // No no-data value is set; define a value.  //DGT 8/26/25 
+    	nodata = -9999; // This means that valid -9999 will get clobbered, still a small problem but better than the default 0.
+	}
 	// Per gdal.h header and internet searches GDALGetRasterNoDataValue is a double
 	/* if (datatype == SHORT_TYPE) {
 		nodata = new int16_t;

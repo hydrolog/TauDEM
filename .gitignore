@@ -51,7 +51,7 @@ local.properties
 .builds
 *.dotCover
 ## TODO: If you have NuGet Package Restore enabled, uncomment this
-#packages/
+packages/
 # Visual C++ cache files
 ipch/
 *.aps
@@ -141,7 +141,7 @@ pip-log.txt
 /dropanalysis
 /gridnet
 /lengtharea
-/moveoutletstostrm
+/moveoutletstostreams
 /peukerdouglas
 /pitremove
 /slopearea
@@ -163,3 +163,11 @@ Taudem5PCVS2015/Taudem5PC.VC.opendb
 Taudem5PCVS2015/Taudem5PC.VC.db
 pyfiles/.idea/
 *.db
+# pixi environments
+*.conda
+.pixi
+*.egg-info
+build-*/
+archive/
+pixi.lock
+.vscode/*
